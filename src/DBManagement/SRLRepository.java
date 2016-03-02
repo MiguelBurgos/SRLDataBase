@@ -21,7 +21,7 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
     public SRLRepository() throws RemoteException{
     }
 
-    public int save(Object o) {
+    public int save(Object ob) {
         int iRet = -1;
 /*        try {
             Connection con = DBManager.getInstance().getConnection();
