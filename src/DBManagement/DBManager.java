@@ -48,7 +48,7 @@ public class DBManager {
         } catch (SQLException se) {
             System.out.println(se);
         }
-        return contras;
+        return con;
     }
 
 }
