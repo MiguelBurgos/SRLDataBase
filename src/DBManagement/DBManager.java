@@ -50,5 +50,4 @@ public class DBManager {
         }
         return con;
     }
-
 }
