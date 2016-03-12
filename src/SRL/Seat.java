@@ -25,7 +25,7 @@ public class Seat {
         this.available = true;
     }
 
-    public int getNumber() {
+    public int getId() {
         return number;
     }
 

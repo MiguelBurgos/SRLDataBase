@@ -6,11 +6,17 @@
 package DBManagement;
 
 import SRL.IRemoteSRL;
+import SRL.Seat;
+import SRL.Spectacle;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -40,6 +46,56 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
             System.out.println(se);
       }*/
         return iRet;
+    }
+    
+    public ArrayList<Spectacle> readSpectacles(){
+        ArrayList arr = new ArrayList();
+
+        try {
+            String QRY = "SELECT * FROM espectaculos ORDER By id";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+
+            while (rs.next()) {
+                Spectacle current;
+                int id = rs.getInt("Id");
+                String nombre = rs.getString("nombre");
+                Date fecha = rs.getDate("fecha");
+                current = new Spectacle(id, nombre, fecha);
+                
+                String seatsTable = rs.getString("tabla_asientos");
+                current = readSeats(seatsTable, current);
+                arr.add(current);
+            }
+            System.out.println(QRY);
+            stmt.close();
+        } catch (SQLException se) {
+            System.out.println(se);
+        }
+        return arr;
+    }
+    
+    private Spectacle readSeats(String tableName, Spectacle spectacle){
+        ArrayList arr = new ArrayList();
+        try {
+            String QRY = "SELECT * FROM " + tableName + " ORDER By id";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+
+            while (rs.next()) {
+                int id = rs.getInt("Id");
+                boolean available = rs.getBoolean("disponible");
+                arr.add(new Seat(id, available));
+            }
+            System.out.println(QRY);
+            stmt.close();
+        } catch (SQLException se) {
+            System.out.println(se);
+        }
+        spectacle.setSeats(arr);
+        return spectacle;
     }
 
 }

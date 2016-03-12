@@ -7,6 +7,10 @@ package SRL;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -18,13 +22,13 @@ public class Spectacle {
 
     private String name;
     private Date date;
-    private ArrayList<Seat> seats;
+    private Map<Integer, Seat> seats;
 
     public Spectacle(int id, String name, Date fecha) {
         this.id = id;
         this.name = name;
         this.date = fecha;
-        this.seats = new ArrayList<>();
+        this.seats = new HashMap<>();
     }
 
     public int getId() {
@@ -39,8 +43,9 @@ public class Spectacle {
         return date;
     }
 
-    public ArrayList<Seat> getSeats() {
-        return seats;
+    public List<Seat> getSeats() {
+        List<Seat> seatsList = new ArrayList<>(seats.values());
+        return seatsList;
     }
 
     public void setName(String name) {
@@ -51,8 +56,12 @@ public class Spectacle {
         this.date = fecha;
     }
 
-    public void setSeats(ArrayList<Seat> asientos) {
-        this.seats = asientos;
+    public void setSeats(List<Seat> seats) {
+        for (Iterator<Seat> iterator = seats.iterator(); iterator.hasNext();) {
+            Seat next = iterator.next();
+            System.out.println(next.getId());
+            this.seats.put(next.getId(), next);   
+        }
     }
 
 }
