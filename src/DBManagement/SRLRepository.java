@@ -17,6 +17,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -76,7 +78,52 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         return arr;
     }
     
-    private Spectacle readSeats(String tableName, Spectacle spectacle){
+    public int updateSeats(Spectacle s) {
+        int iRet = -1;
+        try {
+            Connection con = DBManager.getInstance().getConnection();
+            List<Seat> seats = s.getSeats();
+            for (Iterator<Seat> iterator = seats.iterator(); iterator.hasNext();) {
+                Seat next = iterator.next();
+
+                String SQL = "UPDATE " + getSeatsTable_Name(s) + " SET disponible=? WHERE Id=?";
+                PreparedStatement pstmt = con.prepareStatement(SQL);
+                pstmt.setBoolean(1, next.isAvailable());
+                pstmt.setInt(2, next.getId());
+
+                iRet = pstmt.executeUpdate();
+                System.out.println(pstmt.toString());
+                pstmt.close();
+            }
+            
+        } catch (SQLException se) {
+            System.out.println(se);
+        }
+
+        return iRet;
+    }
+
+    public int updateSeat(Spectacle sp, Seat se) {
+        int iRet = -1;
+        try {
+            Connection con = DBManager.getInstance().getConnection();
+            String SQL = "UPDATE " + getSeatsTable_Name(sp) + " SET disponible=? WHERE Id=?";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setBoolean(1, se.isAvailable());
+            pstmt.setInt(2, se.getId());
+
+            iRet = pstmt.executeUpdate();
+            System.out.println(pstmt.toString());
+            pstmt.close();
+
+        } catch (SQLException sqlE) {
+            System.out.println(sqlE);
+        }
+
+        return iRet;
+    }
+    
+    private Spectacle readSeats(String tableName, Spectacle s){
         ArrayList arr = new ArrayList();
         try {
             String QRY = "SELECT * FROM " + tableName + " ORDER By id";
@@ -94,8 +141,28 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         } catch (SQLException se) {
             System.out.println(se);
         }
-        spectacle.setSeats(arr);
-        return spectacle;
+        s.setSeats(arr);
+        return s;
     }
 
+    private String getSeatsTable_Name(Spectacle s) {
+        String tableName = null;
+
+        try {
+            String QRY = "SELECT * FROM espectaculos WHERE name=" + s.getName();
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+
+            while (rs.next()) {
+                tableName = rs.getString("tabla_asientos");
+            }
+
+            System.out.println(stmt.toString());
+            stmt.close();
+        } catch (SQLException se) {
+            System.out.println(se);
+        }
+        return tableName;
+    }
 }
