@@ -28,30 +28,10 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
 
     public SRLRepository() throws RemoteException{
     }
-
-    public int save(Object ob) {
-        int iRet = -1;
-/*        try {
-            Connection con = DBManager.getInstance().getConnection();
-            String SQL = "INSERT INTO Province (Id, ShortName, Name) values(?,?,?)";
-
-            PreparedStatement pstmt = con.prepareStatement(SQL);
-            pstmt.setInt(1, o.getId());
-            pstmt.setString(2, o.getShortName());
-            pstmt.setString(3, o.getName());
-
-            iRet = pstmt.executeUpdate();
-
-            System.out.println(pstmt.toString());
-            pstmt.close();
-        } catch (SQLException se) {
-            System.out.println(se);
-      }*/
-        return iRet;
-    }
     
-    public ArrayList<Spectacle> readSpectacles(){
-        ArrayList arr = new ArrayList();
+    @Override
+    public List<Spectacle> readSpectacles() throws RemoteException{
+        List arr = new ArrayList();
 
         try {
             String QRY = "SELECT * FROM espectaculos ORDER By id";
@@ -60,13 +40,10 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
             ResultSet rs = stmt.executeQuery(QRY);
 
             while (rs.next()) {
-                Spectacle current;
                 int id = rs.getInt("Id");
                 String nombre = rs.getString("nombre");
                 Date fecha = rs.getDate("fecha");
-                current = new Spectacle(id, nombre, fecha);
-                
-                String seatsTable = rs.getString("tabla_asientos");
+                Spectacle current = new Spectacle(id, nombre, fecha);
                 current = readSeats(current);
                 arr.add(current);
             }
@@ -78,7 +55,31 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         return arr;
     }
     
-    public int updateSeats(Spectacle s) {
+    @Override
+    public Spectacle readSeats(Spectacle s) throws RemoteException{
+        ArrayList arr = new ArrayList();
+        try {
+            String QRY = "SELECT * FROM " + getSeatsTable_Name(s) + " ORDER By id";
+            Connection con = DBManager.getInstance().getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(QRY);
+
+            while (rs.next()) {
+                int id = rs.getInt("Id");
+                boolean available = rs.getBoolean("disponible");
+                arr.add(new Seat(id, available));
+            }
+            System.out.println(QRY);
+            stmt.close();
+        } catch (SQLException se) {
+            System.out.println(se);
+        }
+        s.setSeats(arr);
+        return s;
+    }
+    
+    @Override
+    public int updateSeats(Spectacle s) throws RemoteException{
         int iRet = -1;
         try {
             Connection con = DBManager.getInstance().getConnection();
@@ -103,7 +104,8 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         return iRet;
     }
 
-    public int updateSeat(Spectacle sp, Seat se) {
+    @Override
+    public int updateSeat(Spectacle sp, Seat se) throws RemoteException{
         int iRet = -1;
         try {
             Connection con = DBManager.getInstance().getConnection();
@@ -121,28 +123,6 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         }
 
         return iRet;
-    }
-    
-    public Spectacle readSeats(Spectacle s){
-        ArrayList arr = new ArrayList();
-        try {
-            String QRY = "SELECT * FROM " + getSeatsTable_Name(s) + " ORDER By id";
-            Connection con = DBManager.getInstance().getConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(QRY);
-
-            while (rs.next()) {
-                int id = rs.getInt("Id");
-                boolean available = rs.getBoolean("disponible");
-                arr.add(new Seat(id, available));
-            }
-            System.out.println(QRY);
-            stmt.close();
-        } catch (SQLException se) {
-            System.out.println(se);
-        }
-        s.setSeats(arr);
-        return s;
     }
 
     private String getSeatsTable_Name(Spectacle s) {

@@ -5,20 +5,24 @@
  */
 package SRL;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  *
  * @author MiguelAngel
  */
-public class Reservation {
+public class Reservation implements Serializable{
 
-    private String owner;
+    private static final long serialVersionUID = 1L;
+    private final String owner;
+    
     private Spectacle show;
-    private Seat seat;
+    private Seat selected;
+    private List<Seat> preSold; 
 
-    public Reservation(String owner, Spectacle show, Seat seat) {
+    public Reservation(String owner) {
         this.owner = owner;
-        this.show = show;
-        this.seat = seat;
     }
 
     public String getOwner() {
@@ -29,9 +33,24 @@ public class Reservation {
         return show;
     }
 
-    public Seat getSeat() {
-        return seat;
+    public Seat getSelected() {
+        return selected;
     }
 
+    public List<Seat> getPreSold() {
+        return preSold;
+    }
+
+    public void setShow(Spectacle show) {
+        this.show = show;
+    }
+
+    public void setSelected(Seat selected) {
+        this.selected = selected;
+    }
+
+    public void setPreSold(List<Seat> preSold) {
+        this.preSold = preSold;
+    }
 
 }

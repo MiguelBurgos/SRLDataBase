@@ -5,6 +5,7 @@
  */
 package SRL;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,8 +17,9 @@ import java.util.Map;
  *
  * @author MiguelAngel
  */
-public class Spectacle {
+public class Spectacle implements Serializable{
 
+    private static final long serialVersionUID = 1L;
     private final int id;
 
     private String name;

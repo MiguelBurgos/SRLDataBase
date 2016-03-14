@@ -5,12 +5,15 @@
  */
 package SRL;
 
+import java.io.Serializable;
+
 /**
  *
  * @author MiguelAngel
  */
-public class Seat {
-
+public class Seat implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
     private final int number;
 
     private boolean available;

@@ -5,10 +5,22 @@
  */
 package SRL;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.List;
+
 /**
  *
  * @author MiguelAngel
  */
-public interface IRemoteSRL {
+public interface IRemoteSRL extends Remote{
 
+    public List<Spectacle> readSpectacles() throws RemoteException;
+    
+    public int updateSeats(Spectacle s) throws RemoteException;
+    
+    public int updateSeat(Spectacle sp, Seat se) throws RemoteException;
+    
+    public Spectacle readSeats(Spectacle s) throws RemoteException;
+    
 }
