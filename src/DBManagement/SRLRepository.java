@@ -67,7 +67,7 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
                 current = new Spectacle(id, nombre, fecha);
                 
                 String seatsTable = rs.getString("tabla_asientos");
-                current = readSeats(seatsTable, current);
+                current = readSeats(current);
                 arr.add(current);
             }
             System.out.println(QRY);
@@ -123,10 +123,10 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         return iRet;
     }
     
-    private Spectacle readSeats(String tableName, Spectacle s){
+    public Spectacle readSeats(Spectacle s){
         ArrayList arr = new ArrayList();
         try {
-            String QRY = "SELECT * FROM " + tableName + " ORDER By id";
+            String QRY = "SELECT * FROM " + getSeatsTable_Name(s) + " ORDER By id";
             Connection con = DBManager.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(QRY);
