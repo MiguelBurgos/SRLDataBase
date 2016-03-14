@@ -5,7 +5,7 @@
  */
 package test;
 
-import DBManagement.SRLRepository;
+import DataBase.SRLRepository;
 import SRL.Seat;
 import SRL.Spectacle;
 import java.util.Iterator;
