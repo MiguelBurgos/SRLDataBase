@@ -40,7 +40,7 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
             ResultSet rs = stmt.executeQuery(QRY);
 
             while (rs.next()) {
-                int id = rs.getInt("Id");
+                int id = rs.getInt("id");
                 String nombre = rs.getString("nombre");
                 Date fecha = rs.getDate("fecha");
                 Spectacle current = new Spectacle(id, nombre, fecha);
@@ -59,13 +59,14 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
     public Spectacle readSeats(Spectacle s) throws RemoteException{
         ArrayList arr = new ArrayList();
         try {
-            String QRY = "SELECT * FROM " + getSeatsTable_Name(s) + " ORDER By id";
+            String QRY = "SELECT * FROM " + getSeatsTableName(s) + " ORDER By id";
+            System.out.println(QRY);
             Connection con = DBManager.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(QRY);
 
             while (rs.next()) {
-                int id = rs.getInt("Id");
+                int id = rs.getInt("id");
                 boolean available = rs.getBoolean("disponible");
                 arr.add(new Seat(id, available));
             }
@@ -87,7 +88,7 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
             for (Iterator<Seat> iterator = seats.iterator(); iterator.hasNext();) {
                 Seat next = iterator.next();
 
-                String SQL = "UPDATE " + getSeatsTable_Name(s) + " SET disponible=? WHERE Id=?";
+                String SQL = "UPDATE " + getSeatsTableName(s) + " SET disponible=? WHERE id=?";
                 PreparedStatement pstmt = con.prepareStatement(SQL);
                 pstmt.setBoolean(1, next.isAvailable());
                 pstmt.setInt(2, next.getId());
@@ -109,7 +110,7 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         int iRet = -1;
         try {
             Connection con = DBManager.getInstance().getConnection();
-            String SQL = "UPDATE " + getSeatsTable_Name(sp) + " SET disponible=? WHERE Id=?";
+            String SQL = "UPDATE " + getSeatsTableName(sp) + " SET disponible=? WHERE id=?";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setBoolean(1, se.isAvailable());
             pstmt.setInt(2, se.getId());
@@ -125,11 +126,11 @@ public class SRLRepository extends UnicastRemoteObject implements IRemoteSRL{
         return iRet;
     }
 
-    private String getSeatsTable_Name(Spectacle s) {
+    private String getSeatsTableName(Spectacle s) {
         String tableName = null;
 
         try {
-            String QRY = "SELECT * FROM espectaculos WHERE name=" + s.getName();
+            String QRY = "SELECT * FROM espectaculos WHERE nombre='" + s.getName() + "'";
             Connection con = DBManager.getInstance().getConnection();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(QRY);
