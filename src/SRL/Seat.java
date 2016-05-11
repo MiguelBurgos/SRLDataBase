@@ -12,32 +12,41 @@ import java.io.Serializable;
  * @author MiguelAngel
  */
 public class Seat implements Serializable{
-    
-    private static final long serialVersionUID = 2L;
+
+    private static final long serialVersionUID = 1L;
     private final int number;
 
-    private boolean available;
+    private Integer state;
 
-    public Seat(int number, boolean state) {
+    public Seat(int number, Integer state) {
         this.number = number;
-        this.available = state;
+        this.state = state;
     }
 
     public Seat(int number) {
         this.number = number;
-        this.available = true;
+        this.state = 1;
     }
 
     public int getId() {
         return number;
     }
 
-    public boolean isAvailable() {
-        return available;
+    public Integer getState() {
+        return state;
     }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
+    public void setAvailable() {
+        this.state = 1;
+    }
+    
+    public void setOccupied(){
+        this.state = 2;
+    }
+    
+    public void setSelected(){
+        this.state = 3;
     }
 
 }
+

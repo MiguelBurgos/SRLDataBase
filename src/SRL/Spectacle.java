@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class Spectacle implements Serializable{
 
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 1L;
     private final int id;
 
     private String name;
@@ -61,7 +61,6 @@ public class Spectacle implements Serializable{
     public void setSeats(List<Seat> seats) {
         for (Iterator<Seat> iterator = seats.iterator(); iterator.hasNext();) {
             Seat next = iterator.next();
-            System.out.println(next.getId());
             this.seats.put(next.getId(), next);   
         }
     }

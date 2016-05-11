@@ -31,7 +31,7 @@ public class main {
                 List<Seat> seats = next.getSeats();
                 for (Iterator<Seat> iterator1 = seats.iterator(); iterator1.hasNext();) {
                     Seat next1 = iterator1.next();
-                    System.out.println(next1.getId() + "    " + next1.isAvailable());
+                    System.out.println(next1.getId() + "    " + next1.getState());
                     
                 }
             }

@@ -26,7 +26,7 @@ public class SRLDB {
             // Iniciate DB object
             SRLRepository db = new SRLRepository();
             //Register DB object
-            registry.rebind("SRLRepository", db);
+            registry.rebind("SRLDB", db);
             System.out.println("SRLDataBase is created!!!");
 
         } catch (Exception e) {
